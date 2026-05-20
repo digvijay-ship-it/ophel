@@ -203,6 +203,11 @@ export class AIStudioAdapter extends SiteAdapter {
     return !this.getSessionId()
   }
 
+  isSharePage(): boolean {
+    // 自有会话：/prompts/ID    分享会话：/app/prompts/ID
+    return window.location.pathname.startsWith("/app/prompts/")
+  }
+
   getSessionId(): string {
     const path = window.location.pathname
     // AI Studio 会话 ID 位于 /prompts/ 之后
@@ -373,13 +378,29 @@ export class AIStudioAdapter extends SiteAdapter {
     const sessionId = this.getSessionId()
     if (!sessionId) return null
 
-    const matched = this.getConversationList().find((item) => item.id === sessionId)
-    if (matched?.title?.trim()) {
-      return matched.title.trim()
+    // ① 页面 H1 标题——自有 + 分享页面最权威的来源，不受侧边栏改版 / 链接污染影响。
+    //    自有页：<div class="page-title"><h1 class="mode-title ...">Hello</h1></div>
+    //    分享页：<h1 class="page-title mode-title ...">IoT平台规划</h1>
+    const pageHeading = document.querySelector(
+      "h1[class*='mode-title'], h1.page-title, .page-title h1",
+    )
+    const headingText = pageHeading?.textContent?.trim()
+    if (headingText) {
+      return headingText
     }
 
+    // ② 回退：library 缓存全量精确匹配（仅当用户访问过 /library 时有效）
+    if (this.cachedLibraryConversations && this.cachedLibraryConversations.length > 0) {
+      const matched = this.cachedLibraryConversations.find((item) => item.id === sessionId)
+      if (matched?.title?.trim()) {
+        return matched.title.trim()
+      }
+    }
+
+    // ③ 最终回退：侧边栏内的特定链接（使用精确选择器，避免
+    //    a[href*="/prompts/..."] 误匹配分享按钮等无关元素）
     const link = document.querySelector(
-      `a.prompt-link[href*="/prompts/${sessionId}"], a.name-btn[href*="/prompts/${sessionId}"], a[href*="/prompts/${sessionId}"]`,
+      `a.prompt-link[href*="/prompts/${sessionId}"], a.name-btn[href*="/prompts/${sessionId}"]`,
     )
     const title = link?.textContent?.trim()
     return title || null
