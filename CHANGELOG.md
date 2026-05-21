@@ -15,6 +15,8 @@ versioning follows [Semantic Versioning](https://semver.org/).
 
 ### 🐛 Bug Fixes
 
+- **Gemini Library page: fix "Open in New Tab"** — Adapted to the new `/library` path (renamed from `/mystuff`) and adjusted button position to avoid overlap with Gemini's native delete button.
+
 - **Zen mode exit button text unreadable due to transparency**: Replaced the button background from translucent glass-morphism variables with the theme's primary background color, preventing underlying page text from bleeding through and making both layers unreadable. (#431)
 
 - **Gemini adapter: adapt to new sidebar structure** — Updated selectors and navigation logic to support the new `gem-nav-list-item[data-test-id="conversation"]` sidebar items; added a scroll-to-load helper and fixed conversation ID/title extraction and navigation to restore compatibility with the Gemini sidebar redesign.
