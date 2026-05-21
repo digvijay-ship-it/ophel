@@ -34,6 +34,10 @@ export class TabManager {
   // 用户是否在前台看到过生成完成（用于避免误发通知）
   private userSawCompletion = false
 
+  // 用户是否已查看过本轮生成完成的结果（用于 hideStatusWhenRead 功能）
+  // true = 用户已查看，不应再显示 ✅；false = 用户尚未查看，可显示 ✅
+  private completionViewed = false
+
   // 会话名称缓存（避免读取被污染的标题）
   private lastSessionName: string | null = null
 
@@ -243,8 +247,9 @@ export class TabManager {
     this.lastAiState = isGenerating ? "generating" : "idle"
 
     // 构建标题
-    // 开启 showStatus 时：生成中显示 ⏳，其他情况（idle/completed）都显示 ✅
-    const statusPrefix = this.settings.showStatus !== false ? (isGenerating ? "⏳ " : "✅ ") : ""
+    // 开启 showStatus 时：生成中显示 ⏳，生成完成显示 ✅
+    // 若开启 hideStatusWhenRead 且用户已查看过完成结果，则隐藏 ✅
+    const statusPrefix = this.computeStatusPrefix(isGenerating)
 
     const siteName = this.adapter.getName()
     const format = this.settings.titleFormat || "{status}{title}"
@@ -263,6 +268,28 @@ export class TabManager {
     if (finalTitle) {
       this.applyManagedTitle(finalTitle, force)
     }
+  }
+
+  /**
+   * 计算标题前缀中的状态图标
+   * - showStatus 关闭时返回空字符串
+   * - 生成中始终显示 ⏳
+   * - hideStatusWhenRead 关闭时：idle/completed 均显示 ✅（原有行为）
+   * - hideStatusWhenRead 开启时：✅ 仅代表"有未读的完成回复"，idle 和已查看的 completed 均不显示图标
+   */
+  private computeStatusPrefix(isGenerating: boolean): string {
+    if (this.settings.showStatus === false) return ""
+
+    if (isGenerating) return "⏳ "
+
+    // hideStatusWhenRead 模式：✅ 只在 completed 且未查看时出现
+    if (this.settings.hideStatusWhenRead) {
+      if (this.aiState === "completed" && !this.completionViewed) return "✅ "
+      return ""
+    }
+
+    // 原有行为：idle/completed 均显示 ✅
+    return "✅ "
   }
 
   private applyManagedTitle(title: string, force = false) {
@@ -404,6 +431,10 @@ export class TabManager {
     if (this.aiState !== "generating") {
       this.lastAiState = this.aiState
       this.aiState = "generating"
+      // 新一轮生成开始，重置完成查看标记
+      if (this.settings.hideStatusWhenRead) {
+        this.completionViewed = false
+      }
     }
 
     this.updateTabName()
@@ -432,6 +463,7 @@ export class TabManager {
     this.currentGenerationUsesDomCompletion = true
     this.currentDomCompletionObservedStart = false
     this.domCompletionTrackingStartedAt = Date.now()
+    this.completionViewed = false
     this.startDomCompletionPolling()
     this.updateTabName()
   }
@@ -449,6 +481,7 @@ export class TabManager {
           if (this.aiState !== "generating") {
             this.lastAiState = this.aiState
             this.aiState = "generating"
+            this.completionViewed = false
           }
           this.updateTabName()
           return
@@ -460,6 +493,7 @@ export class TabManager {
           this.lastAiState = this.aiState
           this.aiState = "idle"
           this.userSawCompletion = false
+          this.completionViewed = false
           this.resetDomCompletionState()
           this.updateTabName(true)
         }
@@ -554,6 +588,13 @@ export class TabManager {
         this.userSawCompletion = true
       }
     }
+
+    // 用户切回已完成的标签页，标记为已查看（隐藏 ✅）
+    if (this.aiState === "completed" && !isAway) {
+      if (this.completionViewed) return
+      this.completionViewed = true
+      this.updateTabName(true)
+    }
   }
 
   /**
@@ -566,6 +607,14 @@ export class TabManager {
     if (this.aiState === "generating") {
       if (this.adapter.isGenerating && !this.adapter.isGenerating()) {
         this.userSawCompletion = true
+      }
+    }
+
+    // 用户回到已完成的页面，标记为已查看
+    if (this.aiState === "completed") {
+      if (!this.completionViewed) {
+        this.completionViewed = true
+        this.updateTabName(true)
       }
     }
   }
@@ -595,6 +644,7 @@ export class TabManager {
       this.lastAiState = this.aiState
       this.aiState = "idle"
       this.userSawCompletion = false
+      this.completionViewed = false
       this.updateTabName(true)
       return
     }
@@ -619,11 +669,16 @@ export class TabManager {
       this.sendCompletionNotification()
     }
 
+    // 若用户在前台，标记为已查看（用于 hideStatusWhenRead 功能）
+    if (!isAway) {
+      this.completionViewed = true
+    }
+
     // 重置状态
     this.userSawCompletion = false
     this.resetGenerationConfirmationState()
 
-    // 强制更新标签页标题
+    // 强制更新标签页标题（若 completionViewed 已标记，此次更新会隐藏 ✅）
     this.updateTabName(true)
   }
 
