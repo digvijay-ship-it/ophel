@@ -20,3 +20,4 @@ export {
   type SelectDropdownProps,
   type SelectDropdownOption,
 } from "./SelectDropdown"
+export { PlaceholderInput, type PlaceholderInputProps } from "./PlaceholderInput"
