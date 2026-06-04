@@ -1,5 +1,6 @@
 import {
   USERSCRIPT_LOCALE_RESOURCE_DEFINITIONS,
+  USERSCRIPT_SUPPORTED_LOCALES,
   type UserscriptLocale,
   isUserscriptLocale,
 } from "./resource-manifest"
@@ -162,6 +163,16 @@ export function t(key: string, params?: Record<string, string>): string {
   }
 
   return text
+}
+
+export function getAllLocalizedTexts(key: string): string[] {
+  return Array.from(
+    new Set(
+      USERSCRIPT_SUPPORTED_LOCALES.map((locale) => loadLocaleMessages(locale)[key]).filter(
+        (value): value is string => typeof value === "string" && value.trim().length > 0,
+      ),
+    ),
+  )
 }
 
 export function getCurrentLang(): string {
