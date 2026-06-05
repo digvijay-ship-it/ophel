@@ -103,7 +103,6 @@
 
 - **Folder Organization** — Dual-dimension management with folders and tags, automatically sync conversations from source websites, support search, location, and batch operations
 - **Conversation Export** — Support exporting to Markdown, JSON, TXT formats (including thinking chain), persistent storage for peace of mind
-- **Voyager Import** — Support importing folder and conversation hierarchy from Voyager
 
 ### 🪄 Prompt Library
 
