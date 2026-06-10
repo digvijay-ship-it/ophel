@@ -393,6 +393,7 @@ Our deepest gratitude to the amazing individuals below. Your contributions make 
       <td align="center" valign="top" width="12.5%"><a href="https://github.com/t0ny-peng"><img src="https://avatars.githubusercontent.com/u/4816327?v=4&amp;s=80" width="80px;" alt="t0ny-peng"/><br /><sub><b>t0ny-peng</b></sub></a><br /><span title="Code">💻</span></td>
       <td align="center" valign="top" width="12.5%"><a href="https://github.com/mrpops2ko"><img src="https://avatars.githubusercontent.com/u/34683587?v=4&amp;s=80" width="80px;" alt="mrpops2ko"/><br /><sub><b>mrpops2ko</b></sub></a><br /><span title="Code">💻</span></td>
       <td align="center" valign="top" width="12.5%"><a href="https://github.com/Suxixihuanni"><img src="https://avatars.githubusercontent.com/u/208633969?v=4&amp;s=80" width="80px;" alt="Suxixihuanni"/><br /><sub><b>Suxixihuanni</b></sub></a><br /><span title="Promotion">📣</span></td>
+      <td align="center" valign="top" width="12.5%"><a href="https://github.com/Ice-wilderness"><img src="https://avatars.githubusercontent.com/u/65530045?v=4&amp;s=80" width="80px;" alt="Ice-wilderness"/><br /><sub><b>Ice-wilderness</b></sub></a><br /><span title="Code">💻</span> <span title="Bug reports">🐛</span></td>
     </tr>
   </tbody>
 </table>
