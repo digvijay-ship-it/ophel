@@ -35,6 +35,8 @@ import {
   type Settings,
 } from "~utils/storage"
 
+import { SmartEnterManager } from "~core/smart-enter-manager"
+
 /**
  * 模块初始化上下文
  */
@@ -61,6 +63,7 @@ export interface ModuleInstances {
   userQueryMarkdownRenderer: UserQueryMarkdownRenderer | null
   policyRetryManager: PolicyRetryManager | null
   usageCounterManager: UsageCounterManager | null
+  smartEnterManager: SmartEnterManager | null
 }
 
 // 全局模块实例（用于设置变更时的热更新）
@@ -78,6 +81,7 @@ let modules: ModuleInstances = {
   userQueryMarkdownRenderer: null,
   policyRetryManager: null,
   usageCounterManager: null,
+  smartEnterManager: null,
 }
 
 let readingHistoryAutoStartTimer: ReturnType<typeof setTimeout> | null = null
@@ -439,7 +443,22 @@ export async function initCoreModules(ctx: ModulesContext): Promise<ModuleInstan
   // 13. Policy Retry Manager
   initPolicyRetryManager(ctx)
 
+  // 14. 智能回车/粘贴/滚动等 (Gemini 专属)
+  initSmartEnterManager(ctx)
+
   return modules
+}
+
+/**
+ * 初始化智能回车与粘贴聚焦管理器 (仅 Gemini)
+ */
+export function initSmartEnterManager(ctx: ModulesContext): void {
+  const { adapter, settings, siteId } = ctx
+
+  if (siteId === SITE_IDS.GEMINI || siteId === SITE_IDS.GEMINI_ENTERPRISE) {
+    modules.smartEnterManager = new SmartEnterManager(adapter, settings.tab)
+    modules.smartEnterManager.start()
+  }
 }
 
 /**
@@ -622,6 +641,16 @@ export function subscribeModuleUpdates(ctx: ModulesContext): void {
       modules.policyRetryManager.updateSettings(
         newSettings.geminiEnterprise?.policyRetry || { enabled: false, maxRetries: 3 },
       )
+    }
+
+    // 14. Smart Enter Manager update
+    if (newSettings?.tab && (siteId === SITE_IDS.GEMINI || siteId === SITE_IDS.GEMINI_ENTERPRISE)) {
+      if (modules.smartEnterManager) {
+        modules.smartEnterManager.updateSettings(newSettings.tab)
+      } else {
+        modules.smartEnterManager = new SmartEnterManager(adapter, newSettings.tab)
+        modules.smartEnterManager.start()
+      }
     }
   })
 }

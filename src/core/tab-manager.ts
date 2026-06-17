@@ -55,6 +55,7 @@ export class TabManager {
   private notificationAudio: HTMLAudioElement | null = null
   private notificationRepeatTimer: number | null = null
   private notificationPlaybackId = 0
+  private blinkIntervalId: ReturnType<typeof setInterval> | null = null
 
   // 绑定的事件处理函数引用（用于移除）
   private boundHandleMessage: (event: MessageEvent) => void
@@ -166,6 +167,7 @@ export class TabManager {
     if (!this.isRunning) return
 
     this.isRunning = false
+    this.stopTitleBlink()
     this.resetGenerationConfirmationState()
     this.stopTitleObserver()
     this.expectedTitle = null
@@ -184,6 +186,7 @@ export class TabManager {
    */
   destroy() {
     this.stop()
+    this.stopTitleBlink()
     this.stopNotificationPlayback()
     this.resetGenerationConfirmationState()
     this.stopTitleObserver()
@@ -699,6 +702,7 @@ export class TabManager {
 
     if (!isAway) {
       this.stopNotificationPlayback({ stopCurrentAudio: false })
+      this.stopTitleBlink()
     }
 
     // 用户切换回页面时，检查 DOM 状态
@@ -722,6 +726,7 @@ export class TabManager {
    */
   private onWindowFocus() {
     this.stopNotificationPlayback({ stopCurrentAudio: false })
+    this.stopTitleBlink()
 
     // 用户回到页面时，检查是否应该标记 userSawCompletion
     if (this.aiState === "generating") {
@@ -824,6 +829,22 @@ export class TabManager {
           }) ||
           t("notificationBody")
         platform.notify({ title, message })
+
+        // Blinking title when background tab completes
+        const isAway = this.isUserAway()
+        if (isAway && !this.blinkIntervalId) {
+          let blinkState = false
+          const baseTitle = document.title
+          const cleanTitle = message || baseTitle
+          this.blinkIntervalId = setInterval(() => {
+            if (!this.isUserAway()) {
+              this.stopTitleBlink()
+              return
+            }
+            blinkState = !blinkState
+            document.title = blinkState ? `🔔 ✅ ${cleanTitle}` : baseTitle
+          }, 1000)
+        }
       } catch (e) {
         console.error("[TabManager] 通知发送失败:", e)
       }
@@ -837,6 +858,16 @@ export class TabManager {
     // 自动窗口置顶（使用平台抽象层）
     if (this.settings.autoFocus) {
       platform.focusWindow()
+    }
+  }
+
+  private stopTitleBlink() {
+    if (this.blinkIntervalId) {
+      clearInterval(this.blinkIntervalId)
+      this.blinkIntervalId = null
+      if (this.expectedTitle) {
+        this.applyManagedTitle(this.expectedTitle, true)
+      }
     }
   }
 

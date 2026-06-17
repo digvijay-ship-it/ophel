@@ -905,6 +905,38 @@ const FeaturesPage: React.FC<FeaturesPageProps> = ({ siteId, initialTab }) => {
         checked={settings.tab?.autoFocus ?? false}
         onChange={() => updateNestedSetting("tab", "autoFocus", !settings.tab?.autoFocus)}
       />
+
+      <ToggleRow
+        label={t("smartEnterLabel")}
+        description={t("smartEnterDesc")}
+        settingId="tab-smart-enter"
+        checked={settings.tab?.smartEnter ?? false}
+        onChange={() => updateNestedSetting("tab", "smartEnter", !settings.tab?.smartEnter)}
+      />
+
+      <ToggleRow
+        label={t("pasteFocusFixLabel")}
+        description={t("pasteFocusFixDesc")}
+        settingId="tab-paste-focus-fix"
+        checked={settings.tab?.pasteFocusFix ?? false}
+        onChange={() => updateNestedSetting("tab", "pasteFocusFix", !settings.tab?.pasteFocusFix)}
+      />
+
+      <ToggleRow
+        label={t("showScrollBtnLabel")}
+        description={t("showScrollBtnDesc")}
+        settingId="tab-show-scroll-btn"
+        checked={settings.tab?.showScrollBtn ?? false}
+        onChange={() => updateNestedSetting("tab", "showScrollBtn", !settings.tab?.showScrollBtn)}
+      />
+
+      <ToggleRow
+        label={t("hideDisclaimerLabel")}
+        description={t("hideDisclaimerDesc")}
+        settingId="tab-hide-disclaimer"
+        checked={settings.tab?.hideDisclaimer ?? false}
+        onChange={() => updateNestedSetting("tab", "hideDisclaimer", !settings.tab?.hideDisclaimer)}
+      />
     </SettingCard>
   )
   const usageMonitorCard = (

@@ -275,6 +275,10 @@ export interface Settings {
     privacyMode: boolean
     privacyTitle: string
     customIcon: string
+    smartEnter?: boolean
+    pasteFocusFix?: boolean
+    showScrollBtn?: boolean
+    hideDisclaimer?: boolean
   }
 
   // 阅读历史配置
@@ -546,6 +550,10 @@ export const DEFAULT_SETTINGS: Settings = {
     privacyMode: false,
     privacyTitle: "Google",
     customIcon: "default",
+    smartEnter: true,
+    pasteFocusFix: true,
+    showScrollBtn: true,
+    hideDisclaimer: true,
   },
 
   readingHistory: {

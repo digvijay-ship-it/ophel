@@ -5119,8 +5119,15 @@ export class GeminiAdapter extends SiteAdapter {
   // ==================== 生成状态检测 ====================
 
   isGenerating(): boolean {
-    const stopIcon = document.querySelector('mat-icon[fonticon="stop"]')
-    return stopIcon !== null && (stopIcon as HTMLElement).offsetParent !== null
+    const stopBtn = document.querySelector(
+      'button[aria-label*="Stop"], button[aria-label*="\\u505c\\u6b62"], mat-icon[fonticon="stop"]',
+    )
+    if (stopBtn && (stopBtn as HTMLElement).offsetParent !== null) return true
+    const progress = document.querySelector(
+      'progress, [role="progressbar"], .loading-indicator, .progress-bar, .spinner',
+    )
+    if (progress && (progress as HTMLElement).offsetParent !== null) return true
+    return false
   }
 
   getStopButtonSelectors(): string[] {
