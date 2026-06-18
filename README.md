@@ -241,6 +241,10 @@
       <img src="https://storage.ko-fi.com/cdn/useruploads/post/7b7c1170-1d94-45d4-a1b9-8a268e77dedb_e76c8809-8746-4173-88ff-e06a4e3eb939.png" width="84px;" alt="Lewu Gao" /><br />
       <sub><b>Lewu Gao</b></sub>
     </td>
+    <td align="center" valign="top" width="14.28%">
+      <img src="https://pic1.afdiancdn.com/default/avatar/avatar-orange.png?imageView2/1/w/120/h/120" width="84px;" alt="爱发电用户_AYsw" /><br />
+      <sub><b>爱发电用户_AYsw</b></sub>
+    </td>
   </tr>
   </tbody>
 </table>
