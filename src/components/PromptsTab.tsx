@@ -1871,7 +1871,7 @@ export const PromptsTab: React.FC<PromptsTabProps> = ({
   const handleDelete = (id: string, e: React.MouseEvent) => {
     e.stopPropagation()
     e.preventDefault()
-    showConfirm(t("confirmDelete"), "确定删除该提示词？", async () => {
+    showConfirm(t("confirm"), t("confirmDelete"), async () => {
       await manager.deletePrompt(id)
       showToast(t("deleted"))
       loadData()

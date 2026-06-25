@@ -164,6 +164,7 @@ export const ja = {
   reviewBtn: "レビュー",
   starBtn: "スター",
   credits: "クレジット",
+  apiNoCredits: "API (クレジットなし)",
   devAndMaintain: "開発・メンテナンス",
   creditsDesc:
     "オープンソースコミュニティのすべての貢献者に感謝します。本拡張機能は、これら優れたオープンソースプロジェクトとツールの上に構築されています。",
@@ -845,6 +846,8 @@ export const ja = {
   conversationsDeleteConfirm: "フォルダ「{folder}」を削除しますか？会話は{inbox}に移動されます。",
   conversationsDeleteConvMsg: "会話「{title}」を削除しますか？",
   confirmDeleteSelectedConvs: "選択した {count} 件の会話を削除しますか？",
+  batchDeleteSuccessWithRemoteErrors:
+    "{localDeletedCount} 件を削除しました（ローカルは成功、クラウドは {remoteFailedCount} 件失敗）。",
   conversationsInbox: "受信トレイ",
   conversationsFolderCreated: "フォルダを作成しました",
   conversationsFolderRenamed: "名前を変更しました",
@@ -1400,6 +1403,7 @@ export const ja = {
   exportFilenameTimestamp: "エクスポート名にタイムスタンプを追加",
   exportFilenameTimestampDesc: "エクスポートしたファイル名の末尾にタイムスタンプを追加します",
   exportIncludeThoughtsLabel: "エクスポートに思考過程を含める",
+  thoughtProcess: "思考プロセス",
   exportIncludeThoughtsDesc: "エクスポート時に思考過程を含めて自動展開します（引用ブロックで区別）",
   exportAttachmentsLabel: "添付ファイル",
   exportPackagingLabel: "Markdownエクスポート方式",

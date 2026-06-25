@@ -294,8 +294,8 @@ const ShortcutsPage: React.FC<ShortcutsPageProps> = ({ siteId: _siteId }) => {
                 })
                 return translated === "globalShortcutUrlDesc"
                   ? isMac
-                    ? "按下全局快捷键 ⌥O 时打开的网址"
-                    : "按下全局快捷键 Alt+O 时打开的网址"
+                    ? "URL opened when pressing the global shortcut ⌥O"
+                    : "URL opened when pressing the global shortcut Alt+O"
                   : translated
               })()}
               settingId="shortcuts-global-url">

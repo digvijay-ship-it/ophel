@@ -100,16 +100,16 @@ const GlobalSearchPage: React.FC<GlobalSearchPageProps> = ({ siteId: _siteId }) 
           "Configure how Search Everywhere matches search results",
         )}>
         <SettingRow
-          label={getLocalizedText("globalSearchShortcutSettingLabel", "全局搜索快捷键")}
+          label={getLocalizedText("globalSearchShortcutSettingLabel", "Global Search Shortcut")}
           description={getLocalizedText(
             "globalSearchShortcutSettingDesc",
-            "跳转到快捷键设置，自定义或禁用全局搜索快捷键。",
+            "Go to Shortcuts page to customize or disable Global Search shortcut.",
           )}
           settingId="global-search-shortcut-setting-link">
           <button
             className="settings-btn settings-btn-secondary"
             onClick={handleNavigateToGlobalSearchShortcut}>
-            {getLocalizedText("globalSearchShortcutSettingAction", "前往设置")}
+            {getLocalizedText("globalSearchShortcutSettingAction", "Go to Settings")}
           </button>
         </SettingRow>
         <ToggleRow

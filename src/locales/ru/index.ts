@@ -157,6 +157,7 @@ export const ru = {
   reviewBtn: "Оценить",
   starBtn: "Star",
   credits: "Благодарности",
+  apiNoCredits: "API (Нет лимита)",
   devAndMaintain: "Разработка и поддержка",
   creditsDesc: "Спасибо всем участникам. Ophel использует отличные open-source проекты.",
   privacyTitle: "Конфиденциальность",
@@ -816,6 +817,8 @@ export const ru = {
   conversationsDeleteConfirm: 'Удалить папку "{folder}"? Чаты будут перемещены в {inbox}.',
   conversationsDeleteConvMsg: "Удалить сеанс «{title}»?",
   confirmDeleteSelectedConvs: "Удалить {count} выбранных сеанса?",
+  batchDeleteSuccessWithRemoteErrors:
+    "Удалено {localDeletedCount} шт. Локально успешно, ошибка облака для {remoteFailedCount}.",
   conversationsInbox: "Входящие",
   conversationsFolderCreated: "Создана",
   conversationsFolderRenamed: "Имя изменено",
@@ -1515,6 +1518,7 @@ export const ru = {
   exportFilenameTimestamp: "Добавлять отметку времени к имени файла",
   exportFilenameTimestampDesc: "Добавляет отметку времени в конец имени экспортируемого файла",
   exportIncludeThoughtsLabel: "Включать рассуждения при экспорте",
+  thoughtProcess: "Процесс рассуждения",
   exportIncludeThoughtsDesc:
     "Включать и автоматически разворачивать рассуждения при экспорте (в виде цитатных блоков)",
   exportAttachmentsLabel: "Вложения",

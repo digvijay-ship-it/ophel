@@ -166,6 +166,7 @@ export const en = {
   websiteDesc: "View documentation, guides, and more",
   visitWebsite: "Visit Website",
   credits: "Credits",
+  apiNoCredits: "API (No credits)",
   devAndMaintain: "Developer & Maintainer",
   creditsDesc:
     "Thanks to all contributors in the open source community. This extension is built upon these excellent open source projects and tools.",
@@ -621,6 +622,7 @@ export const en = {
   exportFilenameTimestamp: "Add Timestamp to Filename",
   exportFilenameTimestampDesc: "Add a timestamp to the end of the exported filename",
   exportIncludeThoughtsLabel: "Include Thoughts in Export",
+  thoughtProcess: "Thought Process",
   exportIncludeThoughtsDesc:
     "Include and auto-expand thoughts when exporting (rendered as blockquotes)",
   exportAttachmentsLabel: "Attachments",
@@ -872,6 +874,8 @@ export const en = {
   conversationsDeleteConfirm: 'Delete folder "{folder}"? Conversations will be moved to {inbox}.',
   conversationsDeleteConvMsg: 'Delete session "{title}"?',
   confirmDeleteSelectedConvs: "Delete {count} selected session(s)?",
+  batchDeleteSuccessWithRemoteErrors:
+    "Deleted {localDeletedCount} items. Local success, but {remoteFailedCount} failed on cloud.",
   conversationsInbox: "Inbox",
   conversationsFolderCreated: "Folder created",
   conversationsFolderRenamed: "Folder renamed",

@@ -102,6 +102,7 @@ export const zhTW = {
   reviewBtn: "評分",
   starBtn: "Star",
   credits: "版權與致謝",
+  apiNoCredits: "API (無額度)",
 
   devAndMaintain: "開發與維護",
   creditsDesc:
@@ -762,6 +763,8 @@ export const zhTW = {
   conversationsDeleteConfirm: '確定刪除此資料夾 "{folder}" 嗎？其中的會話將移到{inbox}。',
   conversationsDeleteConvMsg: '確定刪除會話 "{title}" 嗎？',
   confirmDeleteSelectedConvs: "確定刪除選取的 {count} 個會話嗎？",
+  batchDeleteSuccessWithRemoteErrors:
+    "已刪除 {localDeletedCount} 個，本地成功，雲端失敗 {remoteFailedCount} 個",
   conversationsInbox: "收件箱",
   conversationsFolderCreated: "資料夾已建立",
   conversationsFolderRenamed: "資料夾已重新命名",
@@ -1364,6 +1367,7 @@ export const zhTW = {
   exportFilenameTimestamp: "導出文件名包含時間戳",
   exportFilenameTimestampDesc: "在導出文件名末尾添加時間戳",
   exportIncludeThoughtsLabel: "匯出包含思維鏈",
+  thoughtProcess: "思考過程",
   exportIncludeThoughtsDesc: "匯出時包含並自動展開思維鏈內容（使用引用區塊區分）",
   exportAttachmentsLabel: "附件",
   exportPackagingLabel: "Markdown 匯出方式",

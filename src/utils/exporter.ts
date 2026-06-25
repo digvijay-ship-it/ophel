@@ -412,7 +412,11 @@ export function htmlToMarkdown(el: Element): string {
 
       // 图片
       if (tag === "img") {
-        const alt = (element as HTMLImageElement).alt || element.getAttribute("alt") || "图片"
+        const alt =
+          (element as HTMLImageElement).alt ||
+          element.getAttribute("alt") ||
+          t("chainIconPresetImage") ||
+          "Image"
         const src = element.getAttribute("src") || (element as HTMLImageElement).src || ""
         return `![${alt}](${src})`
       }

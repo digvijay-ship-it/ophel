@@ -158,6 +158,7 @@ export const pt = {
   reviewBtn: "Avaliar",
   starBtn: "Star",
   credits: "Créditos",
+  apiNoCredits: "API (Sem créditos)",
   devAndMaintain: "Desenvolvimento e manutenção",
   creditsDesc:
     "Obrigado a todos os contribuidores. Ophel baseia-se em excelentes projetos de código aberto.",
@@ -818,6 +819,8 @@ export const pt = {
   conversationsDeleteConfirm: 'Excluir a pasta "{folder}"? Os chats serão movidos para a {inbox}.',
   conversationsDeleteConvMsg: 'Excluir a sessão "{title}"?',
   confirmDeleteSelectedConvs: "Excluir {count} sessão(oes) selecionada(s)?",
+  batchDeleteSuccessWithRemoteErrors:
+    "Excluídos {localDeletedCount}. Sucesso local, falha na nuvem para {remoteFailedCount}.",
   conversationsInbox: "Entrada",
   conversationsFolderCreated: "Criada",
   conversationsFolderRenamed: "Renomeada",
@@ -1485,6 +1488,7 @@ Dê o código e depois um resumo de melhorias.`,
   exportFilenameTimestampDesc:
     "Adiciona um carimbo de data e hora ao final do nome do arquivo exportado",
   exportIncludeThoughtsLabel: "Incluir raciocínio na exportação",
+  thoughtProcess: "Processo de pensamento",
   exportIncludeThoughtsDesc:
     "Incluir e expandir automaticamente o raciocínio ao exportar (em blocos de citação)",
   exportAttachmentsLabel: "Anexos",

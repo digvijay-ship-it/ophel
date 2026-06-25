@@ -159,6 +159,7 @@ export const fr = {
   reviewBtn: "Noter",
   starBtn: "Star",
   credits: "Crédits",
+  apiNoCredits: "API (Pas de crédits)",
   devAndMaintain: "Développement et maintenance",
   creditsDesc:
     "Merci à tous les contributeurs. Ophel s'appuie sur d'excellents projets open source.",
@@ -819,6 +820,8 @@ export const fr = {
   conversationsDeleteConfirm: 'Supprimer le dossier "{folder}" ? Les chats iront dans {inbox}.',
   conversationsDeleteConvMsg: 'Supprimer la session "{title}" ?',
   confirmDeleteSelectedConvs: "Supprimer {count} session(s) sélectionnée(s) ?",
+  batchDeleteSuccessWithRemoteErrors:
+    "{localDeletedCount} supprimés. Succès local, échec sur le cloud pour {remoteFailedCount}.",
   conversationsInbox: "Entrée",
   conversationsFolderCreated: "Créé",
   conversationsFolderRenamed: "Renommé",
@@ -1363,6 +1366,7 @@ Donnez le code puis un résumé des améliorations.`,
   exportFilenameTimestamp: "Ajouter un horodatage au nom du fichier",
   exportFilenameTimestampDesc: "Ajouter un horodatage à la fin du nom du fichier exporté",
   exportIncludeThoughtsLabel: "Inclure le raisonnement à l'export",
+  thoughtProcess: "Processus de pensée",
   exportIncludeThoughtsDesc:
     "Inclure et déplier automatiquement le raisonnement lors de l'export (en blocs de citation)",
   exportAttachmentsLabel: "Pièces jointes",

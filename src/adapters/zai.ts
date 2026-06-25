@@ -476,7 +476,8 @@ export class ZaiAdapter extends SiteAdapter {
     const cleaned = markdown.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n")
     const lines = cleaned.split("\n")
     const quotedLines = lines.map((line) => (line.trim().length > 0 ? `> ${line}` : `>`))
-    return ["> **💭 思考过程**", ">", ...quotedLines].join("\n")
+    const thoughtTitle = t("thoughtProcess") || "Thought Process"
+    return [`> **💭 ${thoughtTitle}**`, ">", ...quotedLines].join("\n")
   }
 
   private extractThoughtBlockquotesFromElement(element: Element): {

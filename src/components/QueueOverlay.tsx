@@ -578,7 +578,7 @@ export const QueueOverlay: React.FC<QueueOverlayProps> = ({ adapter, dispatcher 
           <div className="gh-queue-list">
             {items.filter((i) => i.status === "pending" || i.status === "sending").length === 0 ? (
               <div className="gh-queue-empty">
-                队列为空，输入内容后按 {submitKeyDisplay} 发送或排队
+                {t("queueEmpty").replace("Enter", submitKeyDisplay)}
               </div>
             ) : (
               items
@@ -734,8 +734,8 @@ export const QueueOverlay: React.FC<QueueOverlayProps> = ({ adapter, dispatcher 
                 onChange={handleInputChange}
                 placeholder={
                   isGenerating
-                    ? `AI 生成中，${submitKeyDisplay} 加入队列...`
-                    : `输入提示词，${submitKeyDisplay} 直接发送...`
+                    ? t("queuePlaceholderBusy").replace("Enter", submitKeyDisplay)
+                    : t("queuePlaceholderIdle").replace("Enter", submitKeyDisplay)
                 }
                 rows={1}
               />

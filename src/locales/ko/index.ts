@@ -160,6 +160,7 @@ export const ko = {
   reviewBtn: "평가",
   starBtn: "스타",
   credits: "크레딧",
+  apiNoCredits: "API (크레딧 없음)",
   devAndMaintain: "개발 및 유지 관리",
   creditsDesc:
     "오픈 소스 커뮤니티의 모든 기여자들께 감사드립니다. 이 확장 프로그램은 훌륭한 오픈 소스 프로젝트와 도구들을 기반으로 제작되었습니다.",
@@ -817,6 +818,8 @@ export const ko = {
   conversationsDeleteConfirm: '"{folder}" 폴더를 삭제하시겠습니까? 대화는 {inbox}로 이동됩니다.',
   conversationsDeleteConvMsg: '세션 "{title}"을(를) 삭제하시겠습니까?',
   confirmDeleteSelectedConvs: "선택한 {count}개의 대화를 삭제하시겠습니까?",
+  batchDeleteSuccessWithRemoteErrors:
+    "{localDeletedCount}개 삭제 완료(로컬 성공, 클라우드 실패 {remoteFailedCount}개)",
   conversationsInbox: "받은 편지함",
   conversationsFolderCreated: "폴더가 생성되었습니다",
   conversationsFolderRenamed: "폴더 이름이 변경되었습니다",
@@ -1355,6 +1358,7 @@ export const ko = {
   exportFilenameTimestamp: "내보내기 파일명에 타임스탬프 추가",
   exportFilenameTimestampDesc: "내보낸 파일명 끝에 타임스탬프를 추가합니다",
   exportIncludeThoughtsLabel: "내보내기에 사고 과정 포함",
+  thoughtProcess: "사고 과정",
   exportIncludeThoughtsDesc: "내보낼 때 사고 과정을 포함하고 자동으로 펼칩니다(인용 블록으로 구분)",
   exportAttachmentsLabel: "첨부 파일",
   exportPackagingLabel: "Markdown 내보내기 방식",

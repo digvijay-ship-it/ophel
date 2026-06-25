@@ -410,6 +410,7 @@ const ClaudeSettings: React.FC<ClaudeSettingsProps> = ({ siteId }) => {
   const renderTypeBadge = (type: string | undefined) => {
     if (!type)
       return <span style={{ color: "var(--gh-text-secondary)" }}>{t("claudeKeyUntested")}</span>
+    const displayType = type === "API(无额度)" ? t("apiNoCredits") || "API (No credits)" : type
     return (
       <span
         style={{
@@ -419,7 +420,7 @@ const ClaudeSettings: React.FC<ClaudeSettingsProps> = ({ siteId }) => {
           fontWeight: 500,
           backgroundColor: "var(--gh-bg-secondary)",
         }}>
-        {type}
+        {displayType}
       </span>
     )
   }
@@ -713,7 +714,7 @@ const ClaudeSettings: React.FC<ClaudeSettingsProps> = ({ siteId }) => {
                             fontWeight: 500,
                             border: "1px solid var(--gh-border)",
                           }}>
-                          当前使用
+                          {t("claudeCurrentUsing").replace(":", "").replace("：", "")}
                         </span>
                       )}
                       {renderTypeBadge(key.accountType)}

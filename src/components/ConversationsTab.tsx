@@ -1331,7 +1331,10 @@ export const ConversationsTab: React.FC<ConversationsTabProps> = ({
                           }
                           if (result.remoteAttemptedCount > 0 && result.remoteFailedCount > 0) {
                             showToast(
-                              `已删除 ${result.localDeletedCount} 个，本地成功，云端失败 ${result.remoteFailedCount} 个`,
+                              t("batchDeleteSuccessWithRemoteErrors", {
+                                localDeletedCount: String(result.localDeletedCount),
+                                remoteFailedCount: String(result.remoteFailedCount),
+                              }),
                             )
                           }
                           clearSelection()
@@ -1721,8 +1724,8 @@ const ConversationItem = React.memo<ConversationItemProps>(
                   />
                 )}
                 {searchQuery && searchResult?.conversationMatches.has(conv.id)
-                  ? highlightText(conv.title || "无标题", searchQuery)
-                  : conv.title || "无标题"}
+                  ? highlightText(conv.title || t("untitledConversation"), searchQuery)
+                  : conv.title || t("untitledConversation")}
               </span>
             </Tooltip>
 

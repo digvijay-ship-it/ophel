@@ -18,6 +18,7 @@ import {
 } from "~stores/prompts-store"
 import type { Prompt } from "~utils/storage"
 import { isLikelyMobileDevice } from "~utils/device"
+import { t } from "~utils/i18n"
 
 export const AI_STUDIO_SHORTCUT_SYNC_EVENT = "ophel:aistudio-submit-shortcut-synced"
 
@@ -71,7 +72,10 @@ export class PromptManager {
     getPromptsStore().renameCategory(oldName, newName)
   }
 
-  deleteCategory(name: string, defaultCategoryName: string = "未分类") {
+  deleteCategory(
+    name: string,
+    defaultCategoryName: string = t("uncategorized") || "Uncategorized",
+  ) {
     getPromptsStore().deleteCategory(name, defaultCategoryName)
   }
 

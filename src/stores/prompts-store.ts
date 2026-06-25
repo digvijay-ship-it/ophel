@@ -11,6 +11,7 @@ import { getDefaultPrompts, VIRTUAL_CATEGORY } from "~constants"
 import type { Prompt } from "~utils/storage"
 
 import { chromeStorageAdapter } from "./chrome-adapter"
+import { t } from "~utils/i18n"
 
 // ==================== Store 类型定义 ====================
 
@@ -73,7 +74,7 @@ export const usePromptsStore = create<PromptsState>()(
             ),
           })),
 
-        deleteCategory: (name, defaultCategory = "未分类") =>
+        deleteCategory: (name, defaultCategory = t("uncategorized") || "Uncategorized") =>
           set((state) => ({
             prompts: state.prompts.map((p) =>
               p.category === name ? { ...p, category: defaultCategory } : p,
