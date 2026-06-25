@@ -919,6 +919,351 @@ class GeminiMyStuffEnhancer {
   }
 }
 
+class GeminiSmartEnterQueue {
+  private enterQueued = false
+  private pollIntervalId: ReturnType<typeof setInterval> | null = null
+  private retryIntervalId: ReturnType<typeof setInterval> | null = null
+  private keydownListener: ((e: KeyboardEvent) => void) | null = null
+
+  start(): void {
+    console.log("[GeminiSmartEnter] Initializing smart enter queue listener on window...")
+    this.keydownListener = (e: KeyboardEvent) => {
+      if (e.key !== "Enter" || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey) return
+
+      const path = typeof e.composedPath === "function" ? e.composedPath() : []
+      const targetElement =
+        path.find((node): node is HTMLElement => node instanceof HTMLElement) ||
+        (e.target as HTMLElement)
+
+      if (!targetElement) return
+
+      const inInput =
+        targetElement.tagName === "TEXTAREA" ||
+        targetElement.tagName === "INPUT" ||
+        targetElement.getAttribute("contenteditable") === "true" ||
+        targetElement.closest('[contenteditable="true"]') !== null ||
+        targetElement.classList.contains("ql-editor") ||
+        targetElement.closest(".ql-editor") !== null ||
+        targetElement.id === "cdk-live-announcer-0" ||
+        targetElement.classList.contains("cdk-live-announcer-element")
+
+      if (!inInput) return
+
+      const hasAttach = this.hasAttachment()
+      const hasTxt = this.hasText()
+      if (!hasAttach && !hasTxt) return
+
+      const isAnnouncer =
+        targetElement.id === "cdk-live-announcer-0" ||
+        targetElement.classList.contains("cdk-live-announcer-element")
+      const btn = this.findSubmitButton()
+      const uploading = this.isUploading()
+      const btnDisabled = btn ? btn.disabled || btn.getAttribute("aria-disabled") === "true" : true
+      const isBlocked = btnDisabled || uploading
+
+      const shouldIntercept = isBlocked || isAnnouncer || (hasAttach && !hasTxt)
+
+      if (shouldIntercept) {
+        e.preventDefault()
+        e.stopPropagation()
+
+        if (isBlocked) {
+          this.enterQueued = true
+          this.pollForUploadDone()
+        } else if (btn) {
+          const editor = document.querySelector(
+            'div[contenteditable="true"].ql-editor',
+          ) as HTMLElement | null
+          if (editor) {
+            editor.focus()
+          }
+          setTimeout(() => {
+            this.simulateClick(btn)
+          }, 100)
+        }
+      }
+    }
+
+    window.addEventListener("keydown", this.keydownListener, true)
+  }
+
+  stop(): void {
+    if (this.keydownListener) {
+      window.removeEventListener("keydown", this.keydownListener, true)
+      this.keydownListener = null
+    }
+    this.clearTimers()
+  }
+
+  private clearTimers(): void {
+    if (this.pollIntervalId) {
+      clearInterval(this.pollIntervalId)
+      this.pollIntervalId = null
+    }
+    if (this.retryIntervalId) {
+      clearInterval(this.retryIntervalId)
+      this.retryIntervalId = null
+    }
+    this.enterQueued = false
+  }
+
+  private hasText(): boolean {
+    const selectors = [
+      'div[contenteditable="true"].ql-editor',
+      "div.ql-editor",
+      "textarea",
+      '[role="textbox"]',
+    ]
+    for (const selector of selectors) {
+      const editor = document.querySelector(selector)
+      if (editor) {
+        const text =
+          editor.tagName === "INPUT" || editor.tagName === "TEXTAREA"
+            ? (editor as HTMLInputElement | HTMLTextAreaElement).value
+            : editor.textContent
+        if (text && text.trim().length > 0) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
+  private isVisible(el: Element | null): boolean {
+    if (!el) return false
+    const htmlEl = el as HTMLElement
+    return !!(htmlEl.offsetWidth || htmlEl.offsetHeight || htmlEl.getClientRects().length)
+  }
+
+  private isUploading(): boolean {
+    const inputUi = document.querySelector("input-ui")
+    if (!inputUi) {
+      const selectors = [
+        "mat-progress-spinner",
+        "mat-spinner",
+        '[role="progressbar"]',
+        ".upload-progress",
+        ".loading-spinner",
+        ".uploading",
+        ".loading",
+      ]
+      for (const selector of selectors) {
+        const el = document.querySelector(selector)
+        if (el && this.isVisible(el)) {
+          return true
+        }
+      }
+      return false
+    }
+
+    const spinner = inputUi.querySelector('mat-progress-spinner, mat-spinner, [role="progressbar"]')
+    if (spinner && this.isVisible(spinner)) {
+      return true
+    }
+
+    const progressEl = inputUi.querySelector(
+      '[class*="progress"], [class*="spinner"], [class*="uploading"], [class*="loading"]',
+    )
+    if (progressEl) {
+      const tag = progressEl.tagName
+      if (tag !== "BUTTON" && !progressEl.closest("button") && this.isVisible(progressEl)) {
+        return true
+      }
+    }
+
+    return false
+  }
+
+  private hasAttachment(): boolean {
+    if (this.isUploading()) return true
+
+    const inputUi = document.querySelector("input-ui")
+    if (!inputUi) {
+      const selectors = [
+        "mat-chip",
+        ".attachment-container",
+        '[aria-label*="Attachment"]',
+        "thumbnail-element",
+        ".file-attachment-chip",
+        "g-chip",
+        ".thumbnail",
+        ".image-preview",
+        '[data-testid*="attachment"]',
+        'img[src^="blob:"]',
+        'img[src^="data:image"]',
+      ]
+      for (const selector of selectors) {
+        if (document.querySelector(selector)) {
+          return true
+        }
+      }
+      return false
+    }
+
+    const img = inputUi.querySelector("img")
+    if (img) return true
+
+    if (inputUi.querySelector('g-chip, mat-chip, [role="row"], [class*="chip"]')) return true
+
+    const match = inputUi.querySelector(
+      '[class*="attachment"], [class*="file"], [class*="upload-list"]',
+    )
+    if (match && match.tagName !== "BUTTON" && !match.closest("button")) {
+      return true
+    }
+
+    const editor = inputUi.querySelector(".ql-editor") as HTMLElement | null
+    if (editor) {
+      const uploaderHeight = editor.style.getPropertyValue("--uploader-height")
+      if (uploaderHeight && uploaderHeight !== "0px" && uploaderHeight !== "0") {
+        return true
+      }
+    }
+
+    return false
+  }
+
+  private findSubmitButton(): HTMLButtonElement | null {
+    const inputUi = document.querySelector("input-ui")
+    const selectors = [
+      'button[aria-label="Send message"]',
+      'button[aria-label*="Send message"]',
+      'button[aria-label*="Send"]',
+      'button[aria-label*="发送"]',
+      ".send-button",
+      '[data-testid*="send"]',
+      "hg-send-button button",
+    ]
+    if (inputUi) {
+      for (const selector of selectors) {
+        const btn = inputUi.querySelector(selector)
+        if (btn instanceof HTMLButtonElement) {
+          return btn
+        }
+      }
+    }
+    for (const selector of selectors) {
+      const btn = document.querySelector(selector)
+      if (btn instanceof HTMLButtonElement) {
+        if (
+          btn.closest("model-response") ||
+          btn.closest("model-thoughts") ||
+          btn.closest(".feedback-container")
+        ) {
+          continue
+        }
+        return btn
+      }
+    }
+    return null
+  }
+
+  private simulateClick(element: HTMLElement): void {
+    const eventTypes = ["pointerdown", "mousedown", "pointerup", "mouseup", "click"] as const
+    let dispatched = false
+    for (const type of eventTypes) {
+      try {
+        if (typeof PointerEvent === "function") {
+          element.dispatchEvent(
+            new PointerEvent(type, {
+              bubbles: true,
+              cancelable: true,
+              pointerId: 1,
+            }),
+          )
+        } else {
+          element.dispatchEvent(
+            new MouseEvent(type, {
+              bubbles: true,
+              cancelable: true,
+            }),
+          )
+        }
+        dispatched = true
+      } catch {
+        try {
+          element.dispatchEvent(
+            new MouseEvent(type, {
+              bubbles: true,
+              cancelable: true,
+            }),
+          )
+          dispatched = true
+        } catch {}
+      }
+    }
+
+    if (!dispatched) {
+      element.click()
+    }
+  }
+
+  private pollForUploadDone(): void {
+    if (this.pollIntervalId) clearInterval(this.pollIntervalId)
+    let elapsed = 0
+
+    this.pollIntervalId = setInterval(() => {
+      elapsed += 100
+      if (!this.enterQueued) {
+        this.clearTimers()
+        return
+      }
+
+      const btn = this.findSubmitButton()
+      const uploading = this.isUploading()
+      const btnDisabled = btn ? btn.disabled || btn.getAttribute("aria-disabled") === "true" : true
+
+      if (!uploading && !btnDisabled) {
+        if (this.pollIntervalId) clearInterval(this.pollIntervalId)
+        this.pollIntervalId = null
+        this.retrySubmit()
+        return
+      }
+
+      if (elapsed > 45000) {
+        this.clearTimers()
+        console.warn("[GeminiSmartEnter] Upload/Button enable timed out.")
+      }
+    }, 100)
+  }
+
+  private retrySubmit(): void {
+    if (this.retryIntervalId) clearInterval(this.retryIntervalId)
+    let attempts = 0
+
+    this.retryIntervalId = setInterval(() => {
+      attempts++
+      if (!this.enterQueued) {
+        this.clearTimers()
+        return
+      }
+
+      const btn = this.findSubmitButton()
+      const uploading = this.isUploading()
+      const btnDisabled = btn ? btn.disabled || btn.getAttribute("aria-disabled") === "true" : true
+
+      if (btn && !uploading && !btnDisabled) {
+        const editor = document.querySelector(
+          'div[contenteditable="true"].ql-editor',
+        ) as HTMLElement | null
+        if (editor) {
+          editor.focus()
+        }
+        setTimeout(() => {
+          this.simulateClick(btn)
+        }, 100)
+        this.clearTimers()
+        return
+      }
+
+      if (attempts > 30) {
+        this.clearTimers()
+        console.warn("[GeminiSmartEnter] Submit button stayed disabled or wasn't found.")
+      }
+    }, 150)
+  }
+}
+
 interface GeminiOutlineWordCountCacheEntry {
   signature: string
   count: number
@@ -928,6 +1273,7 @@ export class GeminiAdapter extends SiteAdapter {
   private cachedAccountEmail: string | null = null
   private accountEmailLastDetectAt = 0
   private myStuffEnhancer: GeminiMyStuffEnhancer | null = null
+  private smartEnterQueue: GeminiSmartEnterQueue | null = null
   private deepResearchPanelWatchStop: (() => void) | null = null
   private deepResearchPanelObservers = new WeakMap<Element, () => void>()
   private deepResearchPanelTooltipBindings = new WeakMap<HTMLElement, DomTooltipBinding>()
@@ -5430,6 +5776,11 @@ export class GeminiAdapter extends SiteAdapter {
         getUserPathPrefix: () => this.getUserPathPrefix(),
       })
       this.myStuffEnhancer.start()
+    }
+
+    if (!this.smartEnterQueue) {
+      this.smartEnterQueue = new GeminiSmartEnterQueue()
+      this.smartEnterQueue.start()
     }
 
     this.startDeepResearchPanelActions()
